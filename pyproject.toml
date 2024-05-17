@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "ml-system-design-assistant"
+package-mode = false
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.*"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.1"
+ruff = "^0.4.4"
+notebook = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv"
+]
+# Include jupyter checks
+extend-include = ["*.ipynb"]
+
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "N",
+    "UP",
+    "ANN",
+    "RUF",
+    "ASYNC"
+]
+ignore = ["ANN101"]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
