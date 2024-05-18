@@ -1,7 +1,6 @@
 # Similar Design Finder Service
 The main task of this service is to provide the ability to conveniently and quickly search for appropriate examples of documentation on designing machine learning systems (ML System Design Doc) among hundreds of available options. This will allow users to find relevant examples that best match the specifics and requirements of their projects.
 
-MLSD Doc for this service is [here](https://docs.google.com/document/d/1tnVxfmHS9YWIoMFyWiznjuWINbNzBpqyayCFpIwOKnw/)
 
 ## Repository Contents
 
