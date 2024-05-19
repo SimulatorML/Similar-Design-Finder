@@ -14,6 +14,7 @@ class Role(Base):
     role_name = Column(String, unique=True, nullable=False)
     permissions = Column(JSON, nullable=False)
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -43,6 +44,7 @@ class Document(Base):
     s3_link = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
+
 class Embedding(Base):
     __tablename__ = "embeddings"
 
@@ -63,10 +65,14 @@ class Collection(Base):
     created_at = Column(DateTime(timezone=False), default=func.now())
 
 
-class Action(Base):
-    __tablename__ = "actions"
+class FinderAction(Base):
+    __tablename__ = "finder_actions"
 
     action_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"))
-    action = Column(String, nullable=False)
+    query = Column(String, nullable=False)
+    response = Column(String, nullable=False)
+    response_time = Column(Integer, nullable=False)
+    metadata = Column(JSON, nullable=True)
+    feedback = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=False), default=func.now())
