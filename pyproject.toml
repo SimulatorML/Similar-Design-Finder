@@ -8,6 +8,8 @@ python = "3.11.*"
 sqlalchemy = "^2.0.30"
 python-dotenv = "^1.0.1"
 pgvector = "^0.2.5"
+pydantic = "^2.7.1"
+pydantic-settings = "^2.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
