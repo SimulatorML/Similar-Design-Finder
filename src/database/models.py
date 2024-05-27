@@ -66,13 +66,23 @@ class Collection(Base):
 
 
 class FinderQueries(Base):
-    __tablename__ = "finder_actions"
+    __tablename__ = "finder_queries"
 
-    action_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    query_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"))
     query = Column(String, nullable=False)
     response = Column(String, nullable=False)
     response_time = Column(Integer, nullable=False)
     metadata = Column(JSON, nullable=True)
     feedback = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=False), default=func.now())
+
+
+class QueriesClicks(Base):
+    __tablename__ = "queries_clicks"
+
+    click_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    query_id = Column(UUID(as_uuid=True), ForeignKey("finder_queries.query_id"))
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"))
+    click_url = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
