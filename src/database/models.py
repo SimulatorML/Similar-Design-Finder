@@ -87,7 +87,7 @@ class FinderQueries(Base):
     query = Column(String, nullable=False)
     response = Column(String, nullable=False)
     response_time = Column(Integer, nullable=False)
-    metadata = Column(JSON, nullable=True)
+    metadata_info = Column(JSON, nullable=True)
     feedback = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
