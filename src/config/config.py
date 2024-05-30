@@ -16,5 +16,7 @@ class Settings(BaseSettings):
 
     database_uri: str = f"postgresql+asyncpg://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}"
 
+    API_VERSION_STR: str = os.getenv("API_VERSION_STR", "/api/v1")
+
 
 settings = Settings()
