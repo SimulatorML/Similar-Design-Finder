@@ -4,8 +4,9 @@ from pydantic import BaseModel
 
 
 class FindRequest(BaseModel):
-    user_id: uuid.UUID
+    user_id: int | uuid.UUID
     query: str
+    source: str
 
 
 class DesignDocument(BaseModel):
