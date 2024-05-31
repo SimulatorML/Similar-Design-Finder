@@ -12,6 +12,8 @@ pydantic = "^2.7.1"
 pydantic-settings = "^2.2.1"
 asyncpg = "^0.29.0"
 fastapi = "^0.111.0"
+alembic = "^1.13.1"
+greenlet = "^3.0.3"
 
 
 [tool.poetry.group.dev.dependencies]
