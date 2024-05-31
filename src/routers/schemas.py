@@ -3,7 +3,7 @@ import uuid
 from pydantic import BaseModel
 
 
-class Payload(BaseModel):
+class FindRequest(BaseModel):
     user_id: uuid.UUID
     query: str
 
