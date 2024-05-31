@@ -1,1 +1,1 @@
-from .config import settings  # noqa
+from .config import settings  # noqa: F401
