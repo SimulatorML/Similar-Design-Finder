@@ -10,13 +10,7 @@ from src.database.models import *  # noqa: F403
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
-section = config.config_ini_section
-config.set_section_option(section, "PG_HOST", settings.PG_HOST)
-config.set_section_option(section, "PG_PORT", settings.PG_PORT)
-config.set_section_option(section, "PG_USER", settings.PG_USER)
-config.set_section_option(section, "PG_DB", settings.PG_DB)
-config.set_section_option(section, "PG_PASS", settings.PG_PASS)
+config.set_main_option("DB_URI", settings.database_uri)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
