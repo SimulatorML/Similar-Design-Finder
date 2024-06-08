@@ -5,19 +5,28 @@ from pydantic import BaseModel
 
 class FindRequest(BaseModel):
     user_id: int | uuid.UUID
-    query: str
+    request: str
     source: str
 
 
-class DesignDocument(BaseModel):
+class DocumentSchema(BaseModel):
     doc_id: uuid.UUID
-    link: str
+    company: str | None
+    industry: str | None
+    title: str | None
+    description: str | None
+    summarization: str | None
+    tags: str | None
+    year: int | None
+    source: str | None
+    status: str | None
+    s3_link: str
     score: float
     metadata: dict | None
 
 
 class FinderResult(BaseModel):
-    query: str
+    request: str
     response: str
     response_time: int
-    documents: list[DesignDocument]
+    documents: list[DocumentSchema]
