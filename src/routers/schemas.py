@@ -28,5 +28,4 @@ class DocumentSchema(BaseModel):
 class FinderResult(BaseModel):
     request: str
     response: str
-    response_time: int
     documents: list[DocumentSchema]

@@ -15,6 +15,8 @@ class Role(Base):
     role_name = Column(String, unique=True, nullable=False)
     permissions = Column(JSON, nullable=False)
 
+    users = relationship("User", back_populates="role")
+
 
 class User(Base):
     __tablename__ = "users"
@@ -61,7 +63,7 @@ class Embedding(Base):
     doc_id = Column(UUID(as_uuid=True), ForeignKey("documents.doc_id", ondelete="CASCADE"))
     collection_id = Column(UUID(as_uuid=True), ForeignKey("collections.collection_id", ondelete="CASCADE"))
     text = Column(String, nullable=False)
-    embedding = Column(Vector(1024), nullable=False)
+    embedding = Column(Vector(384), nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
     document = relationship("Document", back_populates="embeddings")
