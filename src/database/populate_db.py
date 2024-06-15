@@ -16,7 +16,9 @@ async def populate_database() -> None:
     df = pd.read_csv(CSV_PATH)
 
     documents_service = DocumentsService(
-        collection_name=settings.COLLECTION_NAME, model_name=settings.EMBEDDING_MODEL_NAME
+        collection_name=settings.COLLECTION_NAME,
+        model_name=settings.EMBEDDING_MODEL_NAME,
+        model_cache_dir=settings.MODEL_CACHE_DIR,
     )
 
     print("Populating database...")

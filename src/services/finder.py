@@ -5,14 +5,15 @@ from src.routers.schemas import FinderResult, FindRequest
 
 
 class FinderService:
-    def __init__(self, collection_name: str, model_name: str) -> None:
+    def __init__(self, collection_name: str, model_name: str, model_cache_dir: str) -> None:
         self.collection_name = collection_name
         self.model_name = model_name
+        self.model_cache_dir = model_cache_dir
 
         self.collection_repository = CollectionRepository()
         self.docs_repository = DocsRepository()
 
-        self.model = SentenceTransformer(self.model_name)
+        self.model = SentenceTransformer(self.model_name, cache_folder=self.model_cache_dir)
 
     async def find(self, payload: FindRequest) -> FinderResult:
         request_embedding = self.model.encode(payload.request).tolist()

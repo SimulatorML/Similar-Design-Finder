@@ -10,7 +10,11 @@ router = APIRouter()
 
 
 async def get_finder() -> FinderService:
-    return await FinderService(collection_name=settings.COLLECTION_NAME, model_name=settings.EMBEDDING_MODEL_NAME)
+    return FinderService(
+        collection_name=settings.COLLECTION_NAME,
+        model_name=settings.EMBEDDING_MODEL_NAME,
+        model_cache_dir=settings.MODEL_CACHE_DIR,
+    )
 
 
 @router.post("/find", response_model=FinderResult)
