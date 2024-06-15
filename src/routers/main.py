@@ -4,15 +4,15 @@ from fastapi import APIRouter, Depends
 
 from src.config import settings
 from src.routers.schemas import FinderResult, FindRequest
-from src.services.finder import Finder
+from src.services.finder import FinderService
 
 router = APIRouter()
 
 
-async def get_finder() -> Finder:
-    return await Finder.create(collection_name=settings.COLLECTION_NAME, model_name=settings.EMBEDDING_MODEL_NAME)
+async def get_finder() -> FinderService:
+    return await FinderService(collection_name=settings.COLLECTION_NAME, model_name=settings.EMBEDDING_MODEL_NAME)
 
 
 @router.post("/find", response_model=FinderResult)
-async def find(payload: FindRequest, finder: Annotated[Finder, Depends(get_finder)]) -> FinderResult:
+async def find(payload: FindRequest, finder: Annotated[FinderService, Depends(get_finder)]) -> FinderResult:
     return await finder.find(payload)

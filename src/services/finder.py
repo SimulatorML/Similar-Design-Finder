@@ -1,29 +1,31 @@
 from sentence_transformers import SentenceTransformer
 
+from src.repositories import CollectionRepository, DocsRepository
 from src.routers.schemas import FinderResult, FindRequest
-from src.services.postgres import Postgres
-
-COLLECTION_NAME = "design_docs"
-EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"  # just for example
 
 
-class Finder:
-    def __init__(self, postgres: Postgres, collection_name: str, model_name: str) -> None:
-        self.postgres = postgres
-
+class FinderService:
+    def __init__(self, collection_name: str, model_name: str) -> None:
         self.collection_name = collection_name
         self.model_name = model_name
 
-        self.model = SentenceTransformer(self.model_name)
+        self.collection_repository = CollectionRepository()
+        self.docs_repository = DocsRepository()
 
-    @classmethod
-    async def create(cls, collection_name: str, model_name: str) -> "Finder":  # noqa: ANN102
-        postgres = await Postgres.create(collection_name=collection_name, model_name=model_name)
-        return cls(postgres, collection_name=collection_name, model_name=model_name)
+        self.model = SentenceTransformer(self.model_name)
 
     async def find(self, payload: FindRequest) -> FinderResult:
         request_embedding = self.model.encode(payload.request).tolist()
-        docs = await self.postgres.retrieve_docs(request_embedding)
+
+        collection = await self.collection_repository.get_or_create_collection(
+            name=self.collection_name, model=self.model_name
+        )
+
+        doc_ids, similarities = await self.docs_repository.get_similarities(
+            request_embedding=request_embedding, collection_id=collection.collection_id
+        )
+
+        docs = await self.docs_repository.query_similar_docs(doc_ids=doc_ids, similarities=similarities)
 
         # TODO: Add to database
 

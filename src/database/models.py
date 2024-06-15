@@ -63,7 +63,7 @@ class Embedding(Base):
     doc_id = Column(UUID(as_uuid=True), ForeignKey("documents.doc_id", ondelete="CASCADE"))
     collection_id = Column(UUID(as_uuid=True), ForeignKey("collections.collection_id", ondelete="CASCADE"))
     text = Column(String, nullable=False)
-    embedding = Column(Vector(384), nullable=False)
+    embedding = Column(Vector, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
     document = relationship("Document", back_populates="embeddings")
@@ -74,7 +74,7 @@ class Collection(Base):
     __tablename__ = "collections"
 
     collection_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
     model = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
