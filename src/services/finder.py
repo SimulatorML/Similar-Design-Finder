@@ -5,13 +5,20 @@ from src.routers.schemas import FinderResult, FindRequest
 
 
 class FinderService:
-    def __init__(self, collection_name: str, model_name: str, model_cache_dir: str) -> None:
+    def __init__(
+        self,
+        collection_name: str,
+        model_name: str,
+        model_cache_dir: str,
+        collection_repository: CollectionRepository,
+        docs_repository: DocsRepository,
+    ) -> None:
         self.collection_name = collection_name
         self.model_name = model_name
         self.model_cache_dir = model_cache_dir
 
-        self.collection_repository = CollectionRepository()
-        self.docs_repository = DocsRepository()
+        self.collection_repository = collection_repository
+        self.docs_repository = docs_repository
 
         self.model = SentenceTransformer(self.model_name, cache_folder=self.model_cache_dir)
 
