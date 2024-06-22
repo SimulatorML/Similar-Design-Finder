@@ -167,3 +167,5 @@ cython_debug/
 
 # Models cache
 .model_cache
+
+.DS_Store

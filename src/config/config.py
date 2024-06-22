@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     COLLECTION_NAME: str = "design_docs"
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"  # just for example
-    MODEL_CACHE_DIR: str = Path(".model_cache")
+    MODEL_CACHE_DIR: Path = Path(".model_cache")
 
 
 settings = Settings()
