@@ -20,5 +20,9 @@ class Settings(BaseSettings):
 
     API_VERSION_STR: str = os.getenv("API_VERSION_STR", "/api/v1")
 
+    COLLECTION_NAME: str = "design_docs"
+    EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"  # just for example
+    MODEL_CACHE_DIR: Path = Path(".model_cache")
+
 
 settings = Settings()

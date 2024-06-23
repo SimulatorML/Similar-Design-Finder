@@ -1,8 +1,8 @@
-"""Initial commit
+"""Initial revision
 
-Revision ID: 7b9fb2423c81
+Revision ID: 2244e70e2f8b
 Revises:
-Create Date: 2024-06-02 21:08:44.969753
+Create Date: 2024-06-15 22:21:24.866948
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "7b9fb2423c81"
+revision: str = "2244e70e2f8b"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -28,6 +28,7 @@ def upgrade() -> None:
         sa.Column("model", sa.String(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint("collection_id"),
+        sa.UniqueConstraint("name"),
     )
     op.create_table(
         "documents",
@@ -59,7 +60,7 @@ def upgrade() -> None:
         sa.Column("doc_id", sa.UUID(), nullable=True),
         sa.Column("collection_id", sa.UUID(), nullable=True),
         sa.Column("text", sa.String(), nullable=False),
-        sa.Column("embedding", pgvector.sqlalchemy.Vector(dim=1024), nullable=False),
+        sa.Column("embedding", pgvector.sqlalchemy.Vector(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(["collection_id"], ["collections.collection_id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["doc_id"], ["documents.doc_id"], ondelete="CASCADE"),
