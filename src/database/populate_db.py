@@ -6,6 +6,7 @@ from uuid import uuid4
 import pandas as pd
 
 from src.config import settings
+from src.repositories import CollectionRepository, DocsRepository
 from src.routers.schemas import DocumentSchema
 from src.services.documents import DocumentsService
 
@@ -19,6 +20,8 @@ async def populate_database() -> None:
         collection_name=settings.COLLECTION_NAME,
         model_name=settings.EMBEDDING_MODEL_NAME,
         model_cache_dir=settings.MODEL_CACHE_DIR,
+        collection_repository=CollectionRepository(),
+        docs_repository=DocsRepository(),
     )
 
     print("Populating database...")
