@@ -50,17 +50,17 @@ class DocsRepository:
             query = (
                 select(
                     Embedding.doc_id,
-                    Embedding.embedding.cosine_distance(request_embedding).label("cosine_similarity"),
+                    Embedding.embedding.cosine_distance(request_embedding).label("cosine_distance"),
                 )
                 .where(Embedding.collection_id == collection_id)
-                .order_by("cosine_similarity")
+                .order_by("cosine_distance")
                 .limit(limit)
             )
 
             result = await session.execute(query)
             rows = result.fetchall()
             doc_ids = [row[0] for row in rows]
-            similarities = {row[0]: row[1] for row in rows}
+            similarities = {row[0]: 1 - row[1] for row in rows}
 
             return doc_ids, similarities
 
