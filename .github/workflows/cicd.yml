@@ -41,9 +41,9 @@ jobs:
     #   run: |
     #     poetry run ruff check . --fix
 
-    - name: Sort and clean imports with isort
-      run: |
-        poetry run isort .
+    # - name: Sort and clean imports with isort
+    #   run: |
+    #     poetry run isort .
 
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
