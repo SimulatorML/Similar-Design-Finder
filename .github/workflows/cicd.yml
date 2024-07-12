@@ -7,8 +7,8 @@ on:
       - develop/CICD
 
 permissions:
-  contents: write
-  packages: write
+    contents: read
+    packages: write
 
 jobs:
   build-and-deploy:
@@ -66,19 +66,18 @@ jobs:
     - name: Push Docker image to GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
 
-    - name: Deploy to server
-      env:
-        DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
-        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-        DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-      run: |
-        echo "$DEPLOY_SSH_PRIVATE_KEY" > /tmp/private_key
-        chmod 600 /tmp/private_key
-        ssh -i /tmp/private_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
-          docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
-          docker pull ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
-          docker stop my_app || true
-          docker rm my_app || true
-          docker run -d --name my_app -p 80:80 ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
-        EOF
-
+    # - name: Deploy to server
+    #   env:
+    #     DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+    #     DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+    #     DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+    #   run: |
+    #     echo "$DEPLOY_SSH_PRIVATE_KEY" > /tmp/private_key
+    #     chmod 600 /tmp/private_key
+    #     ssh -i /tmp/private_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << EOF
+    #       docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin <<< ${{ secrets.GITHUB_TOKEN }}
+    #       docker pull ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+    #       docker stop my_app || true
+    #       docker rm my_app || true
+    #       docker run -d --name my_app -p 80:80 ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+    #     EOF
