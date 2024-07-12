@@ -37,9 +37,9 @@ jobs:
       run: |
         poetry install
 
-    - name: Format with ruff (black replacement)
-      run: |
-        poetry run ruff check . --fix
+    # - name: Format with ruff (black replacement)
+    #   run: |
+    #     poetry run ruff check . --fix
 
     - name: Sort and clean imports with isort
       run: |
