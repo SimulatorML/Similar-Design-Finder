@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - develop/CICD
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   build-and-deploy:
