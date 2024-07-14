@@ -7,7 +7,9 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     image: similar_design_finder_service:latest
-    command: uvicorn src.app.app:app --host 0.0.0.0 --port 8080 --reload
+    platform: linux/amd64
+    environment:
+      - ENV=${ENV}
     ports:
       - 8080:8080
     volumes:
