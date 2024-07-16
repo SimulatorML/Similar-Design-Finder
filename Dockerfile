@@ -1,3 +1,3 @@
 # Test image for CICD
-FROM alpine
-CMD ["echo", "Hello World!"]
+FROM alpine:3.7
+CMD ["echo", "Hello World"]
