@@ -19,7 +19,6 @@ jobs:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script_stop: true
         script: |
           echo "Starting deployment..."
           docker --version
