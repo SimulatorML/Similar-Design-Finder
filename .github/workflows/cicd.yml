@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image
+name: Build, Test, and Deploy Docker Image
 
 on:
   push:
@@ -23,6 +23,27 @@ jobs:
         run: |
           docker build -t ghcr.io/simulatorml/similar-design-finder:latest .
           docker push ghcr.io/simulatorml/similar-design-finder:latest
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pre-commit pytest
+
+      - name: Run linters
+        run: pre-commit run --all-files
+
+      - name: Run tests
+        run: pytest
 
   deploy:
     needs: build-and-push
