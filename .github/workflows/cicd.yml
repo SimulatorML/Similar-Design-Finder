@@ -11,19 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: appleboy/ssh-action@master
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Log in to GitHub Container Registry
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-
     - name: Deploy to remote server
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.DEPLOY_SERVER }}
-        username: ${{ secrets.DEPLOY_USER }}
-        key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         script_stop: true
         script: |
           echo "Starting deployment..."
@@ -37,4 +32,3 @@ jobs:
           docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
       env:
         DEBUG: true
-
