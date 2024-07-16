@@ -24,7 +24,7 @@ jobs:
           docker build -t ghcr.io/simulatorml/similar-design-finder:latest .
           docker push ghcr.io/simulatorml/similar-design-finder:latest
 
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -37,20 +37,27 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pre-commit pytest
+          pip install pre-commit
 
       - name: Run linters and formatters
         id: lint
-        run: |
-          pre-commit run --all-files || true
+        run: pre-commit run --all-files
 
-      - name: Notify user
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
         run: |
-          echo "Linters and formatters have made changes to your code."
-          echo "Please review the changes and commit them using the following commands:"
-          echo "  git add ."
-          echo "  git commit -m 'Apply linters' fixes'"
-          echo "  git push"
+          pip install pytest
 
       - name: Run tests
         run: pytest
