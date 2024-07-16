@@ -1,24 +1,26 @@
 name: Deploy to Server
 
 on:
-    workflow_dispatch:
-    push:
-      branches:
-        - develop/CICD
+  workflow_dispatch:
+  push:
+    branches:
+      - develop/CICD
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
-
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
     - name: Deploy to remote server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           echo "Starting deployment..."
           docker --version
