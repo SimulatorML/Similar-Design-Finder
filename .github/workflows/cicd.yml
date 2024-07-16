@@ -1,28 +1,15 @@
-name: CI/CD Pipeline
+name: Deploy to Server
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - develop/CICD
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Log secrets for debugging
-      run: |
-        echo "SERVER_IP: ${{ secrets.SERVER_IP }}"
-        echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}"
-        echo "SSH_PRIVATE_KEY length: $(echo -n "${{ secrets.SSH_PRIVATE_KEY }}" | wc -c)"
-      env:
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-        SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
     - name: Deploy to remote server
       uses: appleboy/ssh-action@master
       with:
