@@ -1,3 +1,4 @@
 # Test image for CICD
 FROM alpine
-CMD ["echo", "Hello Wo!?"]
+CMD ["sh", "-c", "echo 'Hello Wo!?' && tail -f /dev/null"]
+
