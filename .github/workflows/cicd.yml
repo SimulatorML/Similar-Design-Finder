@@ -7,71 +7,34 @@ on:
       - develop/CICD
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-        contents: read
-        packages: write
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: ["3.11.2"]
     steps:
-    # - name: Checkout repository
-    #   uses: actions/checkout@v2
-    #   with:
-    #     token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
-    # - name: Set up Python ${{ matrix.python-version }}
-    #   uses: actions/setup-python@v3
-    #   with:
-    #     python-version: ${{ matrix.python-version }}
-
-    # - name: Install Poetry
-    #   run: |
-    #     curl -sSL https://install.python-poetry.org | python3 -
-    #     echo "export PATH=$HOME/.local/bin:\$PATH" >> $GITHUB_ENV
-
-    # - name: Install dependencies
-    #   run: |
-    #     poetry install
-
-    # - name: Format with ruff (black replacement)
-    #   run: |
-    #     poetry run ruff check . --fix
-
-    # - name: Sort and clean imports with isort
-    #   run: |
-    #     poetry run isort .
-
-    # - name: Set PYTHONPATH
-    #   run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
-
-    # - name: Test with pytest
-    #   run: |
-    #     poetry run pytest
-
-    # - name: Run pre-commit checks
-    #   run: |
-    #     poetry run pre-commit run --all-files
-
-    # - name: Log in to GitHub Container Registry
-    #   run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-
-    # - name: Build Docker image
-    #   run: docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest .
-
-    # - name: Push Docker image to GitHub Container Registry
-    #   run: docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+    - name: Log in to GitHub Container Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
     - name: Deploy to remote server
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.DEPLOY_SERVER }}
         username: ${{ secrets.DEPLOY_USER }}
         key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        script_stop: true
         script: |
+          echo "Starting deployment..."
+          docker --version
+          echo "Pulling Docker image..."
           docker pull ghcr.io/simulatorml/similar-design-finder:latest
+          echo "Stopping existing Docker container if it exists..."
           docker stop similar-design-finder || true
           docker rm similar-design-finder || true
+          echo "Running new Docker container..."
           docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
+      env:
+        DEBUG: true
+
