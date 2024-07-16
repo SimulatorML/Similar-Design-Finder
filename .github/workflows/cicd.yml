@@ -44,6 +44,7 @@ jobs:
         run: pre-commit run --all-files
 
       - name: Commit and push changes if any
+        if: steps.lint.outcome == 'failure'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -54,6 +55,10 @@ jobs:
             git commit -m "chore: auto-commit changes after formatting"
             git push origin ${{ github.ref }}
           fi
+
+      - name: Run linters and formatters again if needed
+        if: steps.lint.outcome == 'failure'
+        run: pre-commit run --all-files
 
   test:
     needs: lint
