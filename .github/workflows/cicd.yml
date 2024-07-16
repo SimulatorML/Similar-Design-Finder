@@ -22,14 +22,16 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          echo "Starting deployment..."
-          docker --version
-          echo "Pulling Docker image..."
-          docker pull ghcr.io/simulatorml/similar-design-finder:latest
-          echo "Stopping existing Docker container if it exists..."
-          docker stop similar-design-finder || true
-          docker rm similar-design-finder || true
-          echo "Running new Docker container..."
-          docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
+            echo "Starting deployment..."
+            hostname
+            docker --version
+            echo "Pulling Docker image..."
+            docker pull ghcr.io/simulatorml/similar-design-finder:latest
+            echo "Stopping existing Docker container if it exists..."
+            docker stop similar-design-finder || true
+            docker rm similar-design-finder || true
+            echo "Running new Docker container..."
+            docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
+
       env:
         DEBUG: true
