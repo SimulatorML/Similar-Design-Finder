@@ -35,3 +35,5 @@ jobs:
           echo "Running new Docker container..."
           docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
           docker logout ghcr.io
+
+          
