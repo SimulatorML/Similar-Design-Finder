@@ -24,21 +24,21 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Deploy to remote server
-      uses: appleboy/scp-action@master
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SERVER_IP }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-    #     script_stop: true
-    #     script: |
-    #       echo "Starting deployment..."
-    #       docker --version
-    #       echo "Pulling Docker image..."
-    #       docker pull ghcr.io/simulatorml/similar-design-finder:latest
-    #       echo "Stopping existing Docker container if it exists..."
-    #       docker stop similar-design-finder || true
-    #       docker rm similar-design-finder || true
-    #       echo "Running new Docker container..."
-    #       docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
-    #   env:
-    #     DEBUG: true
+        script_stop: true
+        script: |
+          echo "Starting deployment..."
+          docker --version
+          echo "Pulling Docker image..."
+          docker pull ghcr.io/simulatorml/similar-design-finder:latest
+          echo "Stopping existing Docker container if it exists..."
+          docker stop similar-design-finder || true
+          docker rm similar-design-finder || true
+          echo "Running new Docker container..."
+          docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
+      env:
+        DEBUG: true
