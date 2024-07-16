@@ -10,25 +10,35 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Start SSH Agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Log secrets for debugging
+      run: |
+        echo "SERVER_IP: ${{ secrets.SERVER_IP }}"
+        echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}"
+        echo "SSH_PRIVATE_KEY length: $(echo -n "${{ secrets.SSH_PRIVATE_KEY }}" | wc -c)"
+      env:
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to remote server
-        run: |
-          echo "Starting deployment..."
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker --version
-            echo "Pulling Docker image..."
-            docker pull ghcr.io/simulatorml/similar-design-finder:latest
-            echo "Stopping existing Docker container if it exists..."
-            docker stop similar-design-finder || true
-            docker rm similar-design-finder || true
-            echo "Running new Docker container..."
-            docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
-          EOF
-
+    - name: Deploy to remote server
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     script_stop: true
+    #     script: |
+    #       echo "Starting deployment..."
+    #       docker --version
+    #       echo "Pulling Docker image..."
+    #       docker pull ghcr.io/simulatorml/similar-design-finder:latest
+    #       echo "Stopping existing Docker container if it exists..."
+    #       docker stop similar-design-finder || true
+    #       docker rm similar-design-finder || true
+    #       echo "Running new Docker container..."
+    #       docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
+    #   env:
+    #     DEBUG: true
