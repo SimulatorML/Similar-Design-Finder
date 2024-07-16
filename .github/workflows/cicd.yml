@@ -43,6 +43,18 @@ jobs:
         id: lint
         run: pre-commit run --all-files
 
+      - name: Commit and push changes if any
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: auto-commit changes after formatting"
+            git push origin ${{ github.ref }}
+          fi
+
   test:
     needs: lint
     runs-on: ubuntu-latest
@@ -84,3 +96,4 @@ jobs:
             docker pull ghcr.io/simulatorml/similar-design-finder:latest
             echo "Running new Docker container..."
             docker run -d ghcr.io/simulatorml/similar-design-finder:latest
+
