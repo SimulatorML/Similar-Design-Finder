@@ -15,8 +15,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Log in to GitHub Container Registry
-      run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    # - name: Log in to GitHub Container Registry
+    #   run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Deploy to remote server
       uses: appleboy/ssh-action@master
@@ -25,15 +25,13 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
+          run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           echo "Starting deployment..."
-          docker --version
+          echo "Stopping existing Docker container if it exists..."
+          docker stop ghcr.io/simulatorml/similar-design-finder:latest
+          docker rm ghcr.io/simulatorml/similar-design-finder:latest
           echo "Pulling Docker image..."
           docker pull ghcr.io/simulatorml/similar-design-finder:latest
-          echo "Stopping existing Docker container if it exists..."
-          docker stop similar-design-finder || true
-          docker rm similar-design-finder || true
           echo "Running new Docker container..."
           docker run -d --name similar-design-finder ghcr.io/simulatorml/similar-design-finder:latest
           docker logout ghcr.io
-
-          
