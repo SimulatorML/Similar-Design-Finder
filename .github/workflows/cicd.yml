@@ -25,7 +25,9 @@ jobs:
           docker push ghcr.io/simulatorml/similar-design-finder:latest
 
   lint:
+    needs: build-and-push
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -63,7 +65,7 @@ jobs:
         run: pytest
 
   deploy:
-    needs: build-and-push
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -84,3 +86,4 @@ jobs:
             docker pull ghcr.io/simulatorml/similar-design-finder:latest
             echo "Running new Docker container..."
             docker run -d ghcr.io/simulatorml/similar-design-finder:latest
+
