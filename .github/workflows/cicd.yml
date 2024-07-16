@@ -42,6 +42,8 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
+            echo "Logging in to GitHub Container Registry..."
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u $ simulatorml --password-stdin
             echo "Starting deployment..."
             echo "Stopping existing Docker container if it exists..."
             docker ps -a --filter ancestor=ghcr.io/simulatorml/similar-design-finder:latest -q | xargs -r docker stop
