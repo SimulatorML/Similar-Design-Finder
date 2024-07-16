@@ -1,11 +1,16 @@
 name: Deploy to Server
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
+    push:
+      branches:
+        - develop/CICD
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
 
     steps:
     - name: Deploy to remote server
