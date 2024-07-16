@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: appleboy/ssh-action@master
-      with:
+
     - name: Deploy to remote server
       uses: appleboy/ssh-action@v0.1.4
       with:
