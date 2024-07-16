@@ -11,7 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: appleboy/ssh-action@master
+      uses: actions/checkout@v2
+
+    - name: Log secrets for debugging
+      run: |
+        echo "SERVER_IP: ${{ secrets.SERVER_IP }}"
+        echo "SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}"
+        echo "SSH_PRIVATE_KEY length: ${#secrets.SSH_PRIVATE_KEY}"
+      env:
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Deploy to remote server
       uses: appleboy/ssh-action@v0.1.4
