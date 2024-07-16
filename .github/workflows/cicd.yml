@@ -27,8 +27,8 @@ jobs:
         script: |
           echo "Starting deployment..."
           echo "Stopping existing Docker container if it exists..."
-          docker stop ghcr.io/simulatorml/similar-design-finder:latest
-          docker rm ghcr.io/simulatorml/similar-design-finder:latest
+          docker ps -a --filter ancestor=ghcr.io/simulatorml/similar-design-finder:latest -q | xargs -r docker stop
+          docker ps -a --filter ancestor=ghcr.io/simulatorml/similar-design-finder:latest -q | xargs -r docker rm
           echo "Pulling Docker image..."
           docker pull ghcr.io/simulatorml/similar-design-finder:latest
           echo "Running new Docker container..."
