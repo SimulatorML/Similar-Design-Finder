@@ -44,7 +44,7 @@ jobs:
         run: pre-commit run --all-files
 
       - name: Commit and push changes if any
-        if: steps.lint.outcome == 'failure'
+        if: failure()
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -56,8 +56,8 @@ jobs:
             git push origin ${{ github.ref }}
           fi
 
-      - name: Run linters and formatters again if needed
-        if: steps.lint.outcome == 'failure'
+      - name: Rerun linters and formatters
+        if: failure()
         run: pre-commit run --all-files
 
   test:
@@ -101,4 +101,3 @@ jobs:
             docker pull ghcr.io/simulatorml/similar-design-finder:latest
             echo "Running new Docker container..."
             docker run -d ghcr.io/simulatorml/similar-design-finder:latest
-
