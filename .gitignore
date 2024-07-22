@@ -164,3 +164,9 @@ cython_debug/
 
 # pyenv
 .python-version
+
+# Models cache
+.model_cache
+.ruff_cache
+
+.DS_Store
