@@ -13,9 +13,12 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./.model_cache:/app/.model_cache
+      - model_cache:/app/.model_cache
     networks:
       - mlsd_network
+
+volumes:
+  model_cache:
 
 networks:
   mlsd_network:
