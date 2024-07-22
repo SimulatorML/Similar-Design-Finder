@@ -1,4 +1,4 @@
-.PHONY: build up down restart populate_db
+.PHONY: build up down restart logs populate_db
 
 DOCKER_COMPOSE_FILE=docker/docker-compose.yaml
 
@@ -14,6 +14,9 @@ down:
 restart:
 	docker compose -f $(DOCKER_COMPOSE_FILE) down
 	ENV=prod docker compose -f $(DOCKER_COMPOSE_FILE) up -d
+
+logs:
+	docker compose -f $(DOCKER_COMPOSE_FILE) logs
 
 populate_db:
 	poetry run python -m src.database.populate_db
