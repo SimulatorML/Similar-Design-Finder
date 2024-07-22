@@ -19,6 +19,7 @@ services:
 
 volumes:
   model_cache:
+    external: true
 
 networks:
   mlsd_network:
