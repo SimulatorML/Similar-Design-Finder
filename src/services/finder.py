@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer
 
 from src.repositories import CollectionRepository, DocsRepository
-from src.routers.schemas import DocumentSchema, FinderResult, FindRequest
+from src.routers.schemas import FinderResult, FindRequest
 
 
 class FinderService:
@@ -34,22 +34,7 @@ class FinderService:
         )
 
         docs = await self.docs_repository.query_similar_docs(doc_ids=doc_ids, similarities=similarities)
-        response = self._prepare_response(docs)
 
         # TODO: Add to database
 
-        return FinderResult(request=payload.request, response=response, documents=docs)
-
-    def _prepare_response(self, docs: list[DocumentSchema]) -> str:
-        response_lines = []
-        for doc in docs:
-            line = (
-                f"*Company*: {doc.company}\n"
-                f"*Industry*: {doc.industry}\n"
-                f"*Description*: {doc.description}\n"
-                f"*Tags*: {doc.tags}\n"
-                f"[Read More]({doc.s3_link})"
-            )
-            response_lines.append(line)
-
-        return "\n\n---\n\n".join(response_lines)
+        return FinderResult(request=payload.request, documents=docs)
