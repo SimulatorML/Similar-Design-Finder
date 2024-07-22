@@ -37,4 +37,4 @@ class FinderService:
 
         # TODO: Add to database
 
-        return FinderResult(request=payload.request, response="Found documents", documents=docs)
+        return FinderResult(request=payload.request, documents=docs)

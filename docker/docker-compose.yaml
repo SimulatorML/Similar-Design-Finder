@@ -1,1 +1,26 @@
-docker-compose config
+version: '3.8'
+
+services:
+  finder:
+    container_name: finder
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: similar_design_finder_service:latest
+    platform: linux/amd64
+    environment:
+      - ENV=${ENV}
+    ports:
+      - 8080:8080
+    volumes:
+      - model_cache:/app/.model_cache
+    networks:
+      - mlsd_network
+
+volumes:
+  model_cache:
+    external: true
+
+networks:
+  mlsd_network:
+    external: true
