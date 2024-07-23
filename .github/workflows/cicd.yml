@@ -21,13 +21,12 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ghcr.io/simulatorml/similar-design-finder:latest .
-          docker push ghcr.io/simulatorml/similar-design-finder:latest
+          docker-compose -f docker/docker-compose.yml build
+          docker-compose -f docker/docker-compose.yml push
 
   lint:
     needs: build-and-push
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -79,11 +78,10 @@ jobs:
             echo "Logging in to GitHub Container Registry..."
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             echo "Starting deployment..."
-            echo "Stopping existing Docker container if it exists..."
-            docker ps -a --filter ancestor=ghcr.io/simulatorml/similar-design-finder:latest -q | xargs -r docker stop
-            docker ps -a --filter ancestor=ghcr.io/simulatorml/similar-design-finder:latest -q | xargs -r docker rm
-            echo "Pulling Docker image..."
-            docker pull ghcr.io/simulatorml/similar-design-finder:latest
-            echo "Running new Docker container..."
-            docker run -d ghcr.io/simulatorml/similar-design-finder:latest
+            echo "Stopping existing Docker containers if they exist..."
+            docker-compose -f docker/docker-compose.yml down
+            echo "Pulling Docker images..."
+            docker-compose -f docker/docker-compose.yml pull
+            echo "Running new Docker containers..."
+            docker-compose -f docker/docker-compose.yml up -d
 
