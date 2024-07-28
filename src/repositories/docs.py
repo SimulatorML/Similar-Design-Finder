@@ -44,7 +44,7 @@ class DocsRepository:
             return False
 
     async def get_similarities(
-        self, request_embedding: list[float], collection_id: uuid.UUID, limit: int = 5
+        self, request_embedding: list[float], collection_id: uuid.UUID, limit: int = 15
     ) -> tuple[list[uuid.UUID], dict]:
         async with async_session_maker() as session:
             query = (
