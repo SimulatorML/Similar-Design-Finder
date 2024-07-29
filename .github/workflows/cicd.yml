@@ -93,4 +93,5 @@ jobs:
             echo "Creating .env.prod file..."
             echo "${{ secrets.ENV_PROD }}" > .env.prod
             echo "Running new Docker container..."
-            docker run --env-file .env.prod -d -p 8080:8080 ghcr.io/simulatorml/similar-design-finder:latest
+            docker run --env-file .env.prod -d --name finder --network mlsd_network -p 8080:8080 ghcr.io/simulatorml/similar-design-finder:latest
+
