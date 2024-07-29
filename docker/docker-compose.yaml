@@ -6,7 +6,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: similar_design_finder_service:latest
+    image: ghcr.io/simulatorml/similar-design-finder:latest
     platform: linux/amd64
     environment:
       - ENV=${ENV}
