@@ -15,7 +15,7 @@ COPY --from=poetry-dependencies /tmp/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ /app/src/
-COPY .env.local .env.test .env.prod /app/
+COPY .env.local* .env.test* .env.prod* /app/
 
 EXPOSE 8080
 CMD ["uvicorn", "src.app.app:app", "--host", "0.0.0.0", "--port", "8080"]
