@@ -60,7 +60,7 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u simulatorml --password-stdin
 
       - name: Add .env.local file for passing docker-compose build and push
-        run: touch .env.local
+        run: touch docker/.env.local
 
       - name: Build Docker image
         run: docker-compose -f docker/docker-compose.yaml build
