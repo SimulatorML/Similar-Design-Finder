@@ -90,5 +90,7 @@ jobs:
             docker-compose -f docker/docker-compose.yaml down
             echo "Pulling Docker image..."
             docker pull ghcr.io/simulatorml/similar-design-finder:latest
+            echo "Creating .env.prod file..."
+            echo "${{ secrets.ENV_PROD }}" > .env.prod
             echo "Running new Docker container..."
-            docker run -d ghcr.io/simulatorml/similar-design-finder:latest
+            docker run --env-file .env.prod -d ghcr.io/simulatorml/similar-design-finder:latest
