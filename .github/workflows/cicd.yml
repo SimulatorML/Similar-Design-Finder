@@ -84,7 +84,8 @@ jobs:
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             echo "Starting deployment..."
             echo "Stopping existing Docker containers if they exist..."
-            docker-compose -f docker/docker-compose.yaml down
+            docker stop finder || true
+            docker rm finder || true
             echo "Pulling Docker image..."
             docker pull ghcr.io/simulatorml/similar-design-finder:latest
             echo "Creating .env.prod file..."
