@@ -45,7 +45,7 @@ Organization of data storage describing design documents.
 * Development of a user interface to ensure easy and intuitive interaction with the bot.
 * Testing and optimization of the bot to ensure its reliability and effectiveness.
 
-### 1.7.2. Exclusions: 
+### 1.7.2. Exclusions:
 Implementation of services: Key Idea Extraction + Similar Design Finder,  Step-by-Step One-Pager Creator, Detailed Design Document Validator, Automated Detailed Design Document Creator, Interview and Validation Service.
 
 # 2. Methodology
@@ -61,14 +61,14 @@ The ranking problem can also be solved in different ways, each of which has its 
 * Keyword search
 * TF-IDF
 * BM25
-* Hybrid (keyword + semantic) 
+* Hybrid (keyword + semantic)
 
 ## 2.2. Choosing metrics
 ### 2.2.1. Offline metrics
 * Recall@K - true positive@k/ (true positive@k + false negative @k)
-* Precision@K - true positive@k/ (true positive@k + false positive @k) 
-* MAP@K - 1/U  * Uu=1AP@Ku  
-* Precision - true positive/ (true positive + false positive) 
+* Precision@K - true positive@k/ (true positive@k + false positive @k)
+* MAP@K - 1/U  * Uu=1AP@Ku
+* Precision - true positive/ (true positive + false positive)
 * Precision (by tags). Expected value: 0.9
 * Precision (by LLM). Expected value: 0.7
 
@@ -76,7 +76,7 @@ The ranking problem can also be solved in different ways, each of which has its 
 * Visited - Number of users who visited the telegram bot
 * Submitted - Number of users who submit prompts
 * Viewed - Number of users who view the response
-* Clicks - Number of Users who click on provided recommendation links 
+* Clicks - Number of Users who click on provided recommendation links
 * DAU/WAU/MAU - daily/weekly/monthly active users
 * User return rate - Percentage of users who used the telegram bot in the previous week/month and continue to use it in the current week/month
 * Zero result rate (ZRR) - the ratio of answers from telegram bot with zero provided documents
@@ -91,7 +91,7 @@ The ranking problem can also be solved in different ways, each of which has its 
 ## 2.3. Defining Objects and Targets
 
 ## 2.4. Data collection.
-As an initial batch of training data, we are planning to use the popular sources of successful ML system design implementations. 
+As an initial batch of training data, we are planning to use the popular sources of successful ML system design implementations.
 Sources:
 	https://www.evidentlyai.com/ml-system-design
 
@@ -106,14 +106,14 @@ This step we can divide into two parts:
 * During the online phase
 
 In the case of the offline phase, we can compare the different algorithms based on the metrics on the test set. The test set should be as representative as it can be. Comparing the current iteration with the previous one allows us to understand whether the direction of changes is correct or not.
-In the case of the online phase, we can analyze the logs of the users’ interactions. For example, some of the users can face problems when they don’t get the relevant documents because of the low quality of the system or no documents related to this query in the database.  Analyzing the logs we can mark such problematic queries and tune the system to enhance the user experience. 
+In the case of the online phase, we can analyze the logs of the users’ interactions. For example, some of the users can face problems when they don’t get the relevant documents because of the low quality of the system or no documents related to this query in the database.  Analyzing the logs we can mark such problematic queries and tune the system to enhance the user experience.
 
 # 3. Pilot Training
 ## 3.1. Solution ML Architecture
 ### 3.1.1. Baseline
 The architecture for the Similar Design Finder Service will start with a baseline solution that uses a straightforward but effective vector space model. This model will utilize a pre-trained BERT encoder to vectorize titles, short descriptions, and tags of the ML System Design Docs. These vector representations will capture the semantic meanings and support efficient similarity searches, which are crucial given the modest dataset size of over 300 documents. This approach minimizes the need for extensive custom model training and updates. The initial setup includes:
 * **Vectorization**: Encoding documents with BERT to convert text into high-dimensional vectors.
-* **Indexing**: Storing these vectors in a high-performance search index to enable fast retrieval. 
+* **Indexing**: Storing these vectors in a high-performance search index to enable fast retrieval.
 
 ![ML Architecture](static/ML_Architecture.png)
 
@@ -130,11 +130,11 @@ This architecture strategy starts with a simple, robust baseline and plans for i
 
 ## 3.2. Pre-Launch Quality Assurance
 Before presenting the Similar Design Doc Finder Service to pilot users, we ensure the system's ability to accurately match user queries with relevant system design documents. To assess the readiness of our system for initial user exposure, we have established the following internal quality benchmarks:
-* **Tag Precision**: 
+* **Tag Precision**:
     * Our service must demonstrate at least 90% precision in correctly tagging design documents. This metric verifies that the system can appropriately categorize documents based on predefined tags in our database of 300 labeled documents. For instance, a user request for "a recommendation system for music streaming" should return a document tagged with "recommender system."
-* **LLM Relevance Scoring**: 
+* **LLM Relevance Scoring**:
     * The system should achieve at least 70% relevance scoring from a Language Model (LLM) evaluation. This involves presenting both the user's query and the retrieved document to the LLM, which then assesses the relevance of the document to the query. This measure ensures the system's effectiveness in fetching documents that are contextually appropriate to the user's needs.
-* **Team Validation**: 
+* **Team Validation**:
     * Before release, there must be agreement among all team members that the system outputs are reliable and relevant. This consensus will be reached through hands-on testing by the team, ensuring that the system meets our standards and behaves as expected in real-world scenarios.
 
 ## 3.3. Pilot Evaluation Method
@@ -159,10 +159,10 @@ Operational requirements include:
 * User support system to handle inquiries and problems reported by users.
 
 ## 3.8. System security.
-### 3.8.1. Data Encryption 
+### 3.8.1. Data Encryption
 We'll use HTTPS for secure data transmission and encrypt stored data to prevent unauthorized access.
 
-### 3.8.2. Authentication and Access Controls 
+### 3.8.2. Authentication and Access Controls
 Access to administrative functions will be restricted to authorized personnel through strong authentication measures.
 
 ### 3.8.3. Credential Security
@@ -201,7 +201,7 @@ Develop a basic version of the search algorithm:
 * Evaluate the algorithm's performance using metrics from 2.2.
 
 Gather initial feedback from a small group of users:
-* Recruit a small group of users to test the initial version of the Telegram bot. 
+* Recruit a small group of users to test the initial version of the Telegram bot.
 * Collect feedback on the bot's interface, search capabilities, and overall user experience.
 
 Refine the bot's interface and search capabilities:
