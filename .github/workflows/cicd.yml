@@ -25,9 +25,6 @@ jobs:
       - name: Build Docker image
         run: docker-compose -f docker/docker-compose.yaml build
 
-    #   - name: Tag Docker image changes
-    #     run: docker tag similar_design_finder_service:latest ghcr.io/simulatorml/similar-design-finder:latest
-
       - name: Push Docker image to GitHub Container Registry
         run: docker push ghcr.io/simulatorml/similar-design-finder:latest
 
@@ -94,4 +91,3 @@ jobs:
             echo "${{ secrets.ENV_PROD }}" > .env.prod
             echo "Running new Docker container..."
             docker run --env-file .env.prod -d --name finder --network mlsd_network -p 8080:8080 ghcr.io/simulatorml/similar-design-finder:latest
-
