@@ -66,13 +66,25 @@ jobs:
         run: docker-compose -f docker/docker-compose.yaml build
 
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/simulatorml/similar-design-finder:latest
+        run: docker-compose -f docker/docker-compose.yaml push
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Copy docker-compose.yaml to remote server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: "docker/docker-compose.yaml"
+          target: "deploys/finder/docker-compose.yaml"
+
       - name: Deploy to remote server
         uses: appleboy/ssh-action@master
         with:
@@ -82,13 +94,12 @@ jobs:
           script: |
             echo "Logging in to GitHub Container Registry..."
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            echo "Starting deployment..."
-            echo "Stopping existing Docker containers if they exist..."
-            docker stop finder || true
-            docker rm finder || true
-            echo "Pulling Docker image..."
-            docker pull ghcr.io/simulatorml/similar-design-finder:latest
+
             echo "Creating .env.prod file..."
+            cd deploys/finder/
             echo "${{ secrets.ENV_PROD }}" > .env.prod
-            echo "Running new Docker container..."
-            docker run --env-file .env.prod -d --name finder --network mlsd_network -p 8080:8080 ghcr.io/simulatorml/similar-design-finder:latest
+
+            echo "Pulling Docker images and restarting services..."
+            docker-compose pull
+            docker-compose down
+            ENV=prod docker-compose up -d
