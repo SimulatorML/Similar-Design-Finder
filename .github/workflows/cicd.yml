@@ -94,3 +94,4 @@ jobs:
             echo "${{ secrets.ENV_PROD }}" > .env.prod
             echo "Running new Docker container..."
             docker run --env-file .env.prod -d -p 8080:8080 ghcr.io/simulatorml/similar-design-finder:latest
+            docker tag ghcr.io/simulatorml/similar-design-finder:latest similar-design-finder:latest
