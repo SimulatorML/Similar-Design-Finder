@@ -10,6 +10,12 @@ services:
     platform: linux/amd64
     environment:
       - ENV=${ENV}
+      - PG_HOST=${PG_HOST}
+      - PG_PORT=${PG_PORT}
+      - PG_USER=${PG_USER}
+      - PG_PASS=${PG_PASS}
+      - PG_DB=${PG_DB}
+      - API_VERSION_STR=${API_VERSION_STR}
     ports:
       - 8080:8080
     volumes:
