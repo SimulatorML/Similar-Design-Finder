@@ -59,6 +59,9 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u simulatorml --password-stdin
 
+      - name: Add .env.local file for passing docker-compose build and push
+        run: touch .env.local
+
       - name: Build Docker image
         run: docker-compose -f docker/docker-compose.yaml build
 
@@ -98,6 +101,7 @@ jobs:
             echo "${{ secrets.ENV_PROD }}" > .env.prod
 
             echo "Pulling Docker images and restarting services..."
+            export ENV=prod
             docker-compose pull
             docker-compose down
-            ENV=prod docker-compose up -d
+            docker-compose up -d
