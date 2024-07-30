@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install ruff==0.4.4
+          pip install ruff==0.4.10
 
       - name: Run linters and formatters
         id: lint
