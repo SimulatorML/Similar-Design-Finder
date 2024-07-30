@@ -8,11 +8,10 @@ on:
   workflow_dispatch:
 
   lint-test:
-    name: Lint and test
     uses: SimulatorML/Similar-Design-Finder/blob/develop/CICD/.github/workflows/ci-dev.yml@main
 
   build-and-push:
-    needs: test
+    needs: lint-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
