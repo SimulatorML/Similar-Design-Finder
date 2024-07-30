@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
   lint-test:
-    uses: SimulatorML/Similar-Design-Finder/blob/develop/CICD/.github/workflows/ci-dev.yml@main
+    name: Lint and test
+    uses: SimulatorML/Similar-Design-Finder/blob/develop/CICD/.github/workflows/ci-dev.yml@develop/CICD
 
   build-and-push:
     needs: lint-test
