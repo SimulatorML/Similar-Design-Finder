@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - dev
-      - develop/**
+      # - develop/**
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   lint:
