@@ -6,10 +6,12 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: similar_design_finder_service:latest
+    image: ghcr.io/simulatorml/similar-design-finder:latest
     platform: linux/amd64
     environment:
-      - ENV=${ENV}
+      - ENV=${ENV:-local}
+    env_file:
+      - .env.${ENV:-local}
     ports:
       - 8080:8080
     volumes:
