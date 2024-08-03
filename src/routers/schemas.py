@@ -1,6 +1,14 @@
 import uuid
+from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+
+
+class UserCreateSchema(BaseModel):
+    telegram_id: int | None
+    username: str | None
+    email: EmailStr | None
+    password: str | None
 
 
 class FindRequest(BaseModel):
@@ -26,5 +34,21 @@ class DocumentSchema(BaseModel):
 
 
 class FinderResult(BaseModel):
+    query_id: uuid.UUID
     request: str
     documents: list[DocumentSchema]
+
+
+class FeedbackLabel(str, Enum):
+    like = "like"
+    dislike = "dislike"
+
+
+class Feedback(BaseModel):
+    query_id: uuid.UUID
+    label: FeedbackLabel
+
+
+class RoleSchema(BaseModel):
+    role_name: str
+    permissions: dict

@@ -1,7 +1,12 @@
+import logging
+import uuid
+
 from sentence_transformers import SentenceTransformer
 
 from src.repositories import CollectionRepository, DocsRepository
-from src.routers.schemas import FinderResult, FindRequest
+from src.routers.schemas import Feedback, FinderResult, FindRequest
+
+logger = logging.getLogger(__name__)
 
 
 class FinderService:
@@ -23,6 +28,7 @@ class FinderService:
         self.model = SentenceTransformer(self.model_name, cache_folder=self.model_cache_dir)
 
     async def find(self, payload: FindRequest) -> FinderResult:
+        query_id = uuid.uuid4()
         request_embedding = self.model.encode(payload.request).tolist()
 
         collection = await self.collection_repository.get_or_create_collection(
@@ -36,5 +42,10 @@ class FinderService:
         docs = await self.docs_repository.query_similar_docs(doc_ids=doc_ids, similarities=similarities)
 
         # TODO: Add to database
+        logger.info(f"Query: {payload.request}")
+        logger.info(f"Found {len(docs)} similar documents")
 
-        return FinderResult(request=payload.request, documents=docs)
+        return FinderResult(query_id=query_id, request=payload.request, documents=docs)
+
+    async def process_feedback(self, payload: Feedback) -> None:
+        pass
