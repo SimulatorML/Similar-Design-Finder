@@ -1,10 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.config import settings
-from src.repositories import CollectionRepository, DocsRepository, UserRepository
-from src.routers.schemas import FinderResult, FindRequest, UserCreateSchema
+from src.repositories import CollectionRepository, DocsRepository, UserActivityRepository, UserRepository
+from src.routers.schemas import Feedback, FinderResult, FindRequest, UserCreateSchema
 from src.services.finder import FinderService
 from src.services.user import UserService
 
@@ -23,6 +23,8 @@ async def get_finder() -> FinderService:
         model_cache_dir=settings.MODEL_CACHE_DIR,
         collection_repository=CollectionRepository(),
         docs_repository=DocsRepository(),
+        users_repository=UserRepository(),
+        user_activity_repository=UserActivityRepository(),
     )
 
 
@@ -37,5 +39,9 @@ async def find(payload: FindRequest, finder: Annotated[FinderService, Depends(ge
 
 
 @router.post("/feedback")
-async def feedback(payload: dict, finder: Annotated[FinderService, Depends(get_finder)]) -> None:
-    return await finder.process_feedback(payload)
+async def feedback(payload: Feedback, finder: Annotated[FinderService, Depends(get_finder)]) -> None:
+    success = await finder.process_feedback(payload)
+    if success:
+        return {"message": "Feedback submitted successfully."}
+    else:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to submit feedback.")

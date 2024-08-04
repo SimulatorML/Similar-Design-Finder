@@ -11,9 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class UserRepository:
-    def __init__(self) -> None:
-        pass
-
     async def create_user(self, user: User) -> User:
         async with async_session_maker() as session:
             try:
@@ -55,4 +52,9 @@ class UserRepository:
     async def get_user_by_id(self, user_id: uuid.UUID) -> User:
         async with async_session_maker() as session:
             result = await session.execute(select(User).where(User.user_id == user_id))
+            return result.scalars().first()
+
+    async def get_user_by_telegram_id(self, telegram_id: int) -> User:
+        async with async_session_maker() as session:
+            result = await session.execute(select(User).where(User.telegram_id == telegram_id))
             return result.scalars().first()
