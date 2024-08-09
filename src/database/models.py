@@ -15,7 +15,7 @@ class Role(Base):
     role_name = Column(String, unique=True, nullable=False)
     permissions = Column(JSON, nullable=False)
 
-    users = relationship("User", back_populates="role")
+    user = relationship("User", back_populates="role")
 
 
 class User(Base):
@@ -30,9 +30,9 @@ class User(Base):
     created_at = Column(DateTime(timezone=False), default=func.now())
     is_active = Column(Boolean, default=True, nullable=False)
 
-    role = relationship("Role", back_populates="users")
-    finder_queries = relationship("FinderQueries", back_populates="user", cascade="all, delete-orphan")
-    queries_clicks = relationship("QueriesClicks", back_populates="user", cascade="all, delete-orphan")
+    role = relationship("Role", back_populates="user")
+    finder_query = relationship("FinderQuery", back_populates="user", cascade="all, delete-orphan")
+    query_click = relationship("QueryClick", back_populates="user", cascade="all, delete-orphan")
 
 
 class Document(Base):
@@ -51,9 +51,9 @@ class Document(Base):
     s3_link = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
-    embeddings = relationship("Embedding", back_populates="document", cascade="all, delete-orphan")
-    finder_queries = relationship("FinderQueryDocument", back_populates="document", cascade="all, delete-orphan")
-    queries_clicks = relationship("QueriesClicks", back_populates="document", cascade="all, delete-orphan")
+    embedding = relationship("Embedding", back_populates="document", cascade="all, delete-orphan")
+    finder_query = relationship("FinderQueryDocument", back_populates="document", cascade="all, delete-orphan")
+    query_click = relationship("QueryClick", back_populates="document", cascade="all, delete-orphan")
 
 
 class Embedding(Base):
@@ -66,8 +66,8 @@ class Embedding(Base):
     embedding = Column(Vector, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
-    document = relationship("Document", back_populates="embeddings")
-    collection = relationship("Collection", back_populates="embeddings")
+    document = relationship("Document", back_populates="embedding")
+    collection = relationship("Collection", back_populates="embedding")
 
 
 class Collection(Base):
@@ -78,10 +78,10 @@ class Collection(Base):
     model = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
-    embeddings = relationship("Embedding", back_populates="collection", cascade="all, delete-orphan")
+    embedding = relationship("Embedding", back_populates="collection", cascade="all, delete-orphan")
 
 
-class FinderQueries(Base):
+class FinderQuery(Base):
     __tablename__ = "finder_queries"
 
     query_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -93,12 +93,12 @@ class FinderQueries(Base):
     feedback = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=False), default=func.now())
 
-    user = relationship("User", back_populates="finder_queries")
-    documents = relationship("FinderQueryDocument", back_populates="finder_query", cascade="all, delete-orphan")
-    queries_clicks = relationship("QueriesClicks", back_populates="finder_query", cascade="all, delete-orphan")
+    user = relationship("User", back_populates="finder_query")
+    document = relationship("FinderQueryDocument", back_populates="finder_query", cascade="all, delete-orphan")
+    query_click = relationship("QueryClick", back_populates="finder_query", cascade="all, delete-orphan")
 
 
-class QueriesClicks(Base):
+class QueryClick(Base):
     __tablename__ = "queries_clicks"
 
     click_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -107,9 +107,9 @@ class QueriesClicks(Base):
     doc_id = Column(UUID(as_uuid=True), ForeignKey("documents.doc_id", ondelete="CASCADE"))
     created_at = Column(DateTime(timezone=False), default=func.now())
 
-    finder_query = relationship("FinderQueries", back_populates="queries_clicks")
-    user = relationship("User", back_populates="queries_clicks")
-    document = relationship("Document", back_populates="queries_clicks")
+    finder_query = relationship("FinderQuery", back_populates="query_click")
+    user = relationship("User", back_populates="query_click")
+    document = relationship("Document", back_populates="query_click")
 
 
 class FinderQueryDocument(Base):
@@ -118,5 +118,5 @@ class FinderQueryDocument(Base):
     query_id = Column(UUID(as_uuid=True), ForeignKey("finder_queries.query_id", ondelete="CASCADE"), nullable=False)
     doc_id = Column(UUID(as_uuid=True), ForeignKey("documents.doc_id", ondelete="CASCADE"), nullable=False)
 
-    finder_query = relationship("FinderQueries", back_populates="documents")
-    document = relationship("Document", back_populates="finder_queries")
+    finder_query = relationship("FinderQuery", back_populates="document")
+    document = relationship("Document", back_populates="finder_query")

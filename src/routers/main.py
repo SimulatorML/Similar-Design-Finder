@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -11,11 +12,13 @@ from src.services.user import UserService
 router = APIRouter()
 
 
+@lru_cache
 async def get_user() -> UserService:
     user_repository = UserRepository()
     return UserService(user_repository=user_repository)
 
 
+@lru_cache
 async def get_finder() -> FinderService:
     return FinderService(
         collection_name=settings.COLLECTION_NAME,

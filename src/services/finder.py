@@ -4,7 +4,7 @@ import uuid
 
 from sentence_transformers import SentenceTransformer
 
-from src.database.models import FinderQueries, FinderQueryDocument, User
+from src.database.models import FinderQuery, FinderQueryDocument, User
 from src.repositories import CollectionRepository, DocsRepository, UserActivityRepository, UserRepository
 from src.routers.schemas import Feedback, FinderResult, FindRequest
 
@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class FinderService:
-    _model = None
-
     def __init__(
         self,
         collection_name: str,
@@ -33,9 +31,7 @@ class FinderService:
         self.users_repository = users_repository
         self.user_activity_repository = user_activity_repository
 
-        if FinderService._model is None:
-            FinderService._model = SentenceTransformer(self.model_name, cache_folder=self.model_cache_dir)
-        self.model = FinderService._model
+        self.model = SentenceTransformer(self.model_name, cache_folder=self.model_cache_dir)
 
     async def find(self, payload: FindRequest) -> FinderResult:
         query_id = uuid.uuid4()
@@ -43,7 +39,7 @@ class FinderService:
         start_time = time.time()
 
         if payload.source == "telegram":
-            user = await self.users_repository.get_user_by_telegram_id(payload.user_id)
+            user = await self.users_repository.get_user_by_id(payload.user_id, telegram=True)
         else:
             user = await self.users_repository.get_user_by_id(payload.user_id)
 
@@ -65,7 +61,7 @@ class FinderService:
 
         response_time = int((time.time() - start_time) * 1000)  # milliseconds
 
-        finder_query = FinderQueries(
+        finder_query = FinderQuery(
             query_id=query_id,
             user_id=user.user_id,
             query=payload.request,
@@ -91,11 +87,11 @@ class FinderService:
         return FinderResult(query_id=query_id, request=payload.request, documents=docs)
 
     async def process_feedback(self, payload: Feedback) -> None:
-        success = await self.user_activity_repository.update_query_feedback(
+        finder_query = await self.user_activity_repository.update_query_feedback(
             query_id=payload.query_id, feedback=payload.label.value
         )
 
-        if not success:
+        if not finder_query:
             logger.error(f"Failed to update feedback for query ID {payload.query_id}")
 
-        return success
+        return finder_query

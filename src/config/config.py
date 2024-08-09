@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     COLLECTION_NAME: str = "design_docs"
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"  # just for example
     MODEL_CACHE_DIR: Path = Path(".model_cache")
+    LOGS_FILEPATH: str = "finder.log"
 
     roles: dict = {
         "user": {

@@ -47,14 +47,15 @@ class UserRepository:
             except IntegrityError as exp:
                 await session.rollback()
                 logger.error(f"Integrity error during role creation: {exp}")
-                raise ValueError("Role with this name already exists") from exp
+                return None
+            except Exception as exp:
+                logger.error(f"Failed to create role: {exp}")
+                return None
 
-    async def get_user_by_id(self, user_id: uuid.UUID) -> User:
+    async def get_user_by_id(self, user_id: uuid.UUID | int, telegram: bool = False) -> User:
         async with async_session_maker() as session:
-            result = await session.execute(select(User).where(User.user_id == user_id))
-            return result.scalars().first()
-
-    async def get_user_by_telegram_id(self, telegram_id: int) -> User:
-        async with async_session_maker() as session:
-            result = await session.execute(select(User).where(User.telegram_id == telegram_id))
+            if telegram:
+                result = await session.execute(select(User).where(User.telegram_id == user_id))
+            else:
+                result = await session.execute(select(User).where(User.user_id == user_id))
             return result.scalars().first()

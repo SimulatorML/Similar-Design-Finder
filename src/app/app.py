@@ -19,12 +19,14 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:
+        logger.info("Starting...")
         role_data = RoleSchema(**settings.roles["user"])
         await UserService(UserRepository()).ensure_role_exists(role_data=role_data)
         logger.info("Roles ensured successfully.")
 
         yield
 
+        logger.info("Service stopped")
     except Exception as exp:
         logger.error(f"Failed during lifespan initialization: {exp}")
         raise exp

@@ -42,10 +42,12 @@ class UserService:
         try:
             if not await self.user_repository.get_role_by_name(role_data.role_name):
                 role = Role(**role_data.model_dump())
-                await self.user_repository.add_role(role)
+                role = await self.user_repository.add_role(role)
+                if not role:
+                    raise Exception(f"Failed to create role: {role_data.role_name}")
                 logger.info(f"Created new role: {role.role_name} with id: {role.role_id}")
             else:
                 logger.info(f"Role already exists: {role_data.role_name}")
         except Exception as exp:
             logger.error(f"Error ensuring role exists: {exp}")
-            raise
+            raise exp

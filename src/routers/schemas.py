@@ -44,6 +44,11 @@ class FeedbackLabel(str, Enum):
     dislike = "dislike"
 
 
+class Source(str, Enum):
+    telegram = "telegram"
+    website = "web"
+
+
 class Feedback(BaseModel):
     query_id: uuid.UUID
     label: FeedbackLabel
