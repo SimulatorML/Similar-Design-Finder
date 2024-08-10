@@ -13,13 +13,13 @@ router = APIRouter()
 
 
 @lru_cache
-async def get_user() -> UserService:
+def get_user() -> UserService:
     user_repository = UserRepository()
     return UserService(user_repository=user_repository)
 
 
 @lru_cache
-async def get_finder() -> FinderService:
+def get_finder() -> FinderService:
     return FinderService(
         collection_name=settings.COLLECTION_NAME,
         model_name=settings.EMBEDDING_MODEL_NAME,
