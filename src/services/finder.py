@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 
 from src.database.models import FinderQuery, FinderQueryDocument, User
 from src.repositories import CollectionRepository, DocsRepository, UserActivityRepository, UserRepository
-from src.routers.schemas import Feedback, FinderResult, FindRequest
+from src.routers.schemas import Feedback, FinderResult, FindRequest, Source
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class FinderService:
         user: User | None = None
         start_time = time.time()
 
-        if payload.source == "telegram":
+        if payload.source == Source.telegram:
             user = await self.users_repository.get_user_by_id(payload.user_id, telegram=True)
         else:
             user = await self.users_repository.get_user_by_id(payload.user_id)

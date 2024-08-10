@@ -11,10 +11,15 @@ class UserCreateSchema(BaseModel):
     password: str | None
 
 
+class Source(str, Enum):
+    telegram = "telegram"
+    web = "web"
+
+
 class FindRequest(BaseModel):
     user_id: int | uuid.UUID
     request: str
-    source: str
+    source: Source
 
 
 class DocumentSchema(BaseModel):
@@ -42,11 +47,6 @@ class FinderResult(BaseModel):
 class FeedbackLabel(str, Enum):
     like = "like"
     dislike = "dislike"
-
-
-class Source(str, Enum):
-    telegram = "telegram"
-    website = "web"
 
 
 class Feedback(BaseModel):
