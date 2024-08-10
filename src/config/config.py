@@ -23,6 +23,18 @@ class Settings(BaseSettings):
     COLLECTION_NAME: str = "design_docs"
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"  # just for example
     MODEL_CACHE_DIR: Path = Path(".model_cache")
+    LOGS_FILEPATH: str = "finder.log"
+
+    roles: dict = {
+        "user": {
+            "role_name": "user",
+            "permissions": {"create_user": False, "read_user": True, "update_user": False, "delete_user": False},
+        },
+        "admin": {
+            "role_name": "admin",
+            "permissions": {"create_user": True, "read_user": True, "update_user": True, "delete_user": True},
+        },
+    }  # just some example
 
 
 settings = Settings()
