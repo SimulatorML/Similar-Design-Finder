@@ -8,12 +8,9 @@ from src.routers.schemas import DocumentSchema
 
 
 class DocsRepository:
-    def __init__(self) -> None:
-        pass
-
-    async def add_document(self, doc_data: DocumentSchema, embedding_data: dict) -> bool:
-        try:
-            async with async_session_maker() as session:
+    async def add_document(self, doc_data: DocumentSchema, embedding_data: dict) -> tuple[Document, Embedding]:
+        async with async_session_maker() as session:
+            try:
                 document = Document(
                     doc_id=doc_data.doc_id,
                     company=doc_data.company,
@@ -39,9 +36,9 @@ class DocsRepository:
 
                 await session.commit()
 
-                return True
-        except Exception:
-            return False
+                return document, embedding
+            except Exception:
+                return None, None
 
     async def get_similarities(
         self, request_embedding: list[float], collection_id: uuid.UUID, limit: int = 15

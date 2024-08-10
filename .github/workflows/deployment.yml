@@ -9,7 +9,7 @@ on:
 jobs:
   lint-test:
     name: Lint and test
-    uses: SimulatorML/Similar-Design-Finder/.github/workflows/ci-dev.yml@develop/CICD # Change to main after merge
+    uses: SimulatorML/Similar-Design-Finder/.github/workflows/ci-dev.yml@main
 
   build-and-push:
     needs: lint-test
