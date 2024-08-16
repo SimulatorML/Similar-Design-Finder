@@ -74,3 +74,13 @@ class UserActivityRepository:
             except Exception as e:
                 logger.error(f"Failed to update feedback: {e}")
                 return None
+
+    async def get_query_by_id(self, query_id: uuid.UUID) -> FinderQuery:
+        async with async_session_maker() as session:
+            query = await session.execute(select(FinderQuery).where(FinderQuery.query_id == query_id))
+            return query.scalars().first()
+
+    async def get_query_documents(self, query_id: uuid.UUID) -> list[FinderQueryDocument]:
+        async with async_session_maker() as session:
+            query = await session.execute(select(FinderQueryDocument).where(FinderQueryDocument.query_id == query_id))
+            return query.scalars().all()

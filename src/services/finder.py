@@ -2,6 +2,7 @@ import logging
 import time
 import uuid
 
+from fastapi import HTTPException, status
 from sentence_transformers import SentenceTransformer
 
 from src.database.models import FinderQuery, FinderQueryDocument, User
@@ -95,3 +96,13 @@ class FinderService:
             logger.error(f"Failed to update feedback for query ID {payload.query_id}")
 
         return finder_query
+
+    async def retrieve_query_results(self, query_id: uuid.UUID) -> FinderResult:
+        query = await self.user_activity_repository.get_query_by_id(query_id)
+        if not query:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Query not found")
+
+        doc_ids = [doc.doc_id for doc in await self.user_activity_repository.get_query_documents(query_id)]
+        docs = await self.docs_repository.query_similar_docs(doc_ids=doc_ids)
+
+        return FinderResult(query_id=query_id, request=query.query, documents=docs)

@@ -1,3 +1,4 @@
+import uuid
 from functools import lru_cache
 from typing import Annotated
 
@@ -48,3 +49,11 @@ async def feedback(payload: Feedback, finder: Annotated[FinderService, Depends(g
         return {"message": "Feedback submitted successfully."}
     else:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to submit feedback.")
+
+
+@router.get("/query/{query_id}", response_model=FinderResult)
+async def get_query_results(query_id: uuid.UUID, finder: Annotated[FinderService, Depends(get_finder)]) -> FinderResult:
+    """
+    Retrieves the results of a previously executed query.
+    """
+    return await finder.retrieve_query_results(query_id)

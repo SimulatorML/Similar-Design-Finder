@@ -61,7 +61,7 @@ class DocsRepository:
 
             return doc_ids, similarities
 
-    async def query_similar_docs(self, doc_ids: list[uuid.UUID], similarities: dict) -> list[DocumentSchema]:
+    async def query_similar_docs(self, doc_ids: list[uuid.UUID], similarities: dict = {}) -> list[DocumentSchema]:
         async with async_session_maker() as session:
             documents = await session.execute(select(Document).where(Document.doc_id.in_(doc_ids)))
             documents = documents.scalars().all()
@@ -79,10 +79,12 @@ class DocsRepository:
                     source=doc.source,
                     status=doc.status,
                     s3_link=doc.s3_link,
-                    score=similarities[doc.doc_id],
+                    score=similarities.get(doc.doc_id),
                     metadata=None,
                 )
                 for doc in documents
             ]
 
-            return sorted(docs, key=lambda doc: doc.score, reverse=True)
+            if similarities:
+                return sorted(docs, key=lambda doc: doc.score, reverse=True)
+            return docs
