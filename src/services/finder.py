@@ -76,8 +76,10 @@ class FinderService:
         if not query_success:
             logger.error(f"Failed to log query for user {user.user_id}")
 
-        query_document_entries = [FinderQueryDocument(query_id=query_id, doc_id=doc_id) for doc_id in doc_ids]
-
+        query_document_entries = [
+            FinderQueryDocument(query_id=query_id, doc_id=doc_id, rank=rank)
+            for rank, doc_id in enumerate(doc_ids, start=1)
+        ]
         docs_success = await self.user_activity_repository.log_query_documents(
             query_document_entries=query_document_entries
         )

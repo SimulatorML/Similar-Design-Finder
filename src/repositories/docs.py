@@ -66,25 +66,26 @@ class DocsRepository:
             documents = await session.execute(select(Document).where(Document.doc_id.in_(doc_ids)))
             documents = documents.scalars().all()
 
-            docs = [
+            doc_dict = {doc.doc_id: doc for doc in documents}
+
+            ordered_docs = [
                 DocumentSchema(
-                    doc_id=doc.doc_id,
-                    company=doc.company,
-                    industry=doc.industry,
-                    title=doc.title,
-                    description=doc.description,
-                    summarization=doc.summarization,
-                    tags=doc.tags,
-                    year=doc.year,
-                    source=doc.source,
-                    status=doc.status,
-                    s3_link=doc.s3_link,
-                    score=similarities.get(doc.doc_id),
+                    doc_id=doc_id,
+                    company=doc_dict[doc_id].company,
+                    industry=doc_dict[doc_id].industry,
+                    title=doc_dict[doc_id].title,
+                    description=doc_dict[doc_id].description,
+                    summarization=doc_dict[doc_id].summarization,
+                    tags=doc_dict[doc_id].tags,
+                    year=doc_dict[doc_id].year,
+                    source=doc_dict[doc_id].source,
+                    status=doc_dict[doc_id].status,
+                    s3_link=doc_dict[doc_id].s3_link,
+                    score=similarities.get(doc_id),
                     metadata=None,
                 )
-                for doc in documents
+                for doc_id in doc_ids
+                if doc_id in doc_dict
             ]
 
-            if similarities:
-                return sorted(docs, key=lambda doc: doc.score, reverse=True)
-            return docs
+            return ordered_docs

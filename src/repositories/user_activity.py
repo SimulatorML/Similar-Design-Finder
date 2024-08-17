@@ -82,5 +82,9 @@ class UserActivityRepository:
 
     async def get_query_documents(self, query_id: uuid.UUID) -> list[FinderQueryDocument]:
         async with async_session_maker() as session:
-            query = await session.execute(select(FinderQueryDocument).where(FinderQueryDocument.query_id == query_id))
+            query = await session.execute(
+                select(FinderQueryDocument)
+                .where(FinderQueryDocument.query_id == query_id)
+                .order_by(FinderQueryDocument.rank)
+            )
             return query.scalars().all()
