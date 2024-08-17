@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop/**
   workflow_dispatch:
 
 jobs:
@@ -25,7 +26,7 @@ jobs:
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u simulatorml --password-stdin
 
       - name: Add .env.local file for passing docker-compose build and push
-        run: touch docker/.env.local
+        run: touch .env.local
 
       - name: Build Docker image
         run: docker compose -f docker/docker-compose.yaml build
@@ -49,7 +50,6 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           source: "docker/docker-compose.yaml"
           target: "deploys/finder"
-          strip_components: 1
 
       - name: Deploy to remote server
         uses: appleboy/ssh-action@master
@@ -67,6 +67,6 @@ jobs:
 
             echo "Pulling Docker images and restarting services..."
             export ENV=prod
-            docker compose pull
-            docker compose down
-            docker compose up -d
+            docker compose -f docker/docker-compose.yaml pull
+            docker compose -f docker/docker-compose.yaml down
+            docker compose -f docker/docker-compose.yaml up -d
