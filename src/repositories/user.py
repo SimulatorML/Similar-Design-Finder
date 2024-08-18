@@ -52,7 +52,7 @@ class UserRepository:
                 logger.error(f"Failed to create role: {exp}")
                 return None
 
-    async def get_user_by_id(self, user_id: uuid.UUID | int, telegram: bool = False) -> User:
+    async def get_user_by_id(self, user_id: uuid.UUID | int, telegram: bool = False) -> User | None:
         async with async_session_maker() as session:
             if telegram:
                 result = await session.execute(select(User).where(User.telegram_id == user_id))

@@ -61,7 +61,12 @@ class DocsRepository:
 
             return doc_ids, similarities
 
-    async def query_similar_docs(self, doc_ids: list[uuid.UUID], similarities: dict = {}) -> list[DocumentSchema]:
+    async def query_similar_docs(
+        self, doc_ids: list[uuid.UUID], similarities: dict | None = None
+    ) -> list[DocumentSchema]:
+        if similarities is None:
+            similarities = {}
+
         async with async_session_maker() as session:
             documents = await session.execute(select(Document).where(Document.doc_id.in_(doc_ids)))
             documents = documents.scalars().all()
