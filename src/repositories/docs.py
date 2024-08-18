@@ -94,3 +94,9 @@ class DocsRepository:
             ]
 
             return ordered_docs
+
+    async def get_document_by_link(self, link: str) -> DocumentSchema:
+        async with async_session_maker() as session:
+            query = select(Document).where(Document.s3_link == link).limit(1)
+            result = await session.execute(query)
+            return result.scalars().first()

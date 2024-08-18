@@ -28,6 +28,12 @@ async def populate_database() -> None:
 
     docs_data = []
     for index, row in df.iterrows():
+        existing_doc = await documents_service.get_document_by_link(row["Link"])
+
+        if existing_doc is not None:
+            print(f"Document with link {row['Link']} already exists. Skipping...")
+            continue
+
         doc_data = DocumentSchema(
             doc_id=uuid4(),
             company=row.get("Company"),
