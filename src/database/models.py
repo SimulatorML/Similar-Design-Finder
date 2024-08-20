@@ -117,6 +117,7 @@ class FinderQueryDocument(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     query_id = Column(UUID(as_uuid=True), ForeignKey("finder_queries.query_id", ondelete="CASCADE"), nullable=False)
     doc_id = Column(UUID(as_uuid=True), ForeignKey("documents.doc_id", ondelete="CASCADE"), nullable=False)
+    rank = Column(Integer)
 
     finder_query = relationship("FinderQuery", back_populates="document")
     document = relationship("Document", back_populates="finder_query")

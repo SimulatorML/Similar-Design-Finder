@@ -64,3 +64,7 @@ class DocumentsService:
         }
 
         await self.docs_repository.add_document(doc_data=doc_data, embedding_data=embedding_data)
+
+    async def get_document_by_link(self, link: str) -> DocumentSchema | None:
+        document = await self.docs_repository.get_document_by_link(link)
+        return document

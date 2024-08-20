@@ -20,3 +20,6 @@ logs:
 
 populate_db:
 	poetry run python -m src.database.populate_db
+
+lint:
+	poetry run pre-commit

@@ -2,6 +2,7 @@ import logging
 import time
 import uuid
 
+from fastapi import HTTPException, status
 from sentence_transformers import SentenceTransformer
 
 from src.database.models import FinderQuery, FinderQueryDocument, User
@@ -43,7 +44,7 @@ class FinderService:
         else:
             user = await self.users_repository.get_user_by_id(payload.user_id)
 
-        if not user:
+        if user is None:
             logger.error(f"User with ID {payload.user_id} not found.")
             return FinderResult(query_id=query_id, request=payload.request, documents=[])
 
@@ -72,16 +73,18 @@ class FinderService:
         )
         query_success = await self.user_activity_repository.log_query(finder_query)
 
-        if not query_success:
+        if query_success is None:
             logger.error(f"Failed to log query for user {user.user_id}")
 
-        query_document_entries = [FinderQueryDocument(query_id=query_id, doc_id=doc_id) for doc_id in doc_ids]
-
+        query_document_entries = [
+            FinderQueryDocument(query_id=query_id, doc_id=doc_id, rank=rank)
+            for rank, doc_id in enumerate(doc_ids, start=1)
+        ]
         docs_success = await self.user_activity_repository.log_query_documents(
             query_document_entries=query_document_entries
         )
 
-        if not docs_success:
+        if docs_success is None:
             logger.error(f"Failed to log query documents for query ID {query_id}")
 
         return FinderResult(query_id=query_id, request=payload.request, documents=docs)
@@ -91,7 +94,17 @@ class FinderService:
             query_id=payload.query_id, feedback=payload.label.value
         )
 
-        if not finder_query:
+        if finder_query is None:
             logger.error(f"Failed to update feedback for query ID {payload.query_id}")
 
         return finder_query
+
+    async def retrieve_query_results(self, query_id: uuid.UUID) -> FinderResult:
+        query = await self.user_activity_repository.get_query_by_id(query_id)
+        if query is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Query not found")
+
+        doc_ids = [doc.doc_id for doc in await self.user_activity_repository.get_query_documents(query_id)]
+        docs = await self.docs_repository.query_similar_docs(doc_ids=doc_ids)
+
+        return FinderResult(query_id=query_id, request=query.query, documents=docs)

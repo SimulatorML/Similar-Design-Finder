@@ -11,7 +11,7 @@ services:
     environment:
       - ENV=${ENV:-local}
     env_file:
-      - .env.${ENV:-local}
+      - ../.env.${ENV:-local}
     ports:
       - 8080:8080
     volumes:
