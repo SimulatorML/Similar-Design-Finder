@@ -34,7 +34,7 @@ class DocumentSchema(BaseModel):
     source: str | None
     status: str | None
     s3_link: str
-    score: float
+    score: float | None
     metadata: dict | None
 
 
